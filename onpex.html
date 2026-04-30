@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Password Advisor by Anan&Tanush</title>
+<style>
+  body {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: Arial, sans-serif;
+    padding: 40px;
+  }
+
+  .box {
+    background: #1e293b;
+    padding: 24px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  }
+
+  input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+  }
+
+  input {
+    background: #0f172a;
+    color: #ffffff;
+    border: 1px solid #334155;
+  }
+
+  button {
+    background: #22c55e;
+    color: #022c22;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #16a34a;
+  }
+
+  .output {
+    margin-top: 20px;
+    padding: 12px;
+    background: #0f172a;
+    border-radius: 8px;
+    border: 1px solid #334155;
+  }
+
+  .pw-list div {
+    background: #1e293b;
+    padding: 8px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    font-family: monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Password Advisor by Anan&Tanush</h2>
+
+  <input id="passwordInput" type="text" placeholder="Enter your password">
+
+  <button onclick="analyzePassword()">Analyze & Suggest</button>
+
+  <div class="output" id="recommendations"></div>
+
+  <h3>Better Password Suggestions</h3>
+  <div class="pw-list" id="suggestions"></div>
+</div>
+
+<script>
+function analyzePassword() {
+  const pw = document.getElementById("passwordInput").value;
+  const rec = document.getElementById("recommendations");
+  const sug = document.getElementById("suggestions");
+
+  if (!pw) {
+    rec.textContent = "Please enter a password first.";
+    sug.innerHTML = "";
+    return;
+  }
+
+  let tips = [];
+
+  if (pw.length < 10) tips.push("Increase length to at least 10–14 characters.");
+  if (!/[A-Z]/.test(pw)) tips.push("Add at least one uppercase letter.");
+  if (!/[a-z]/.test(pw)) tips.push("Add at least one lowercase letter.");
+  if (!/[0-9]/.test(pw)) tips.push("Include at least one number.");
+  if (!/[!@#$%^&*()_\-+=]/.test(pw)) tips.push("Add a special character.");
+  if (/password/i.test(pw)) tips.push("Avoid using the word 'password'.");
+  if (/1234/.test(pw)) tips.push("Avoid predictable sequences like 1234.");
+  if (/([a-zA-Z0-9])\1\1/.test(pw)) tips.push("Avoid repeating characters.");
+
+  if (tips.length === 0) {
+    rec.textContent = "Your password is decent, but here are stronger alternatives.";
+  } else {
+    rec.innerHTML = "<strong>Recommendations:</strong><br>• " + tips.join("<br>• ");
+  }
+
+  sug.innerHTML = "";
+  const suggestions = generateBetterPasswords(pw);
+  suggestions.forEach(p => {
+    const div = document.createElement("div");
+    div.textContent = p;
+    sug.appendChild(div);
+  });
+}
+
+function generateBetterPasswords(base) {
+  const symbols = "!@#$%^&*()_+=-";
+  const randomSymbol = () => symbols[Math.floor(Math.random() * symbols.length)];
+  const randomNum = () => Math.floor(Math.random() * 900 + 100); // 3-digit number
+
+  const transform = (str) =>
+    str.replace(/a/gi, "@")
+       .replace(/s/gi, "$")
+       .replace(/o/gi, "0")
+       .replace(/i/gi, "1")
+       .replace(/e/gi, "3");
+
+  let baseStrong = transform(base);
+
+  let results = [];
+  for (let i = 0; i < 5; i++) {
+    let pw =
+      baseStrong +
+      randomSymbol() +
+      randomNum() +
+      randomSymbol();
+
+    pw = pw.split("").map(c =>
+      Math.random() > 0.6 ? c.toUpperCase() : c
+    ).join("");
+
+    results.push(pw);
+  }
+
+  return results;
+}
+</script>
+
+</body>
+</html>

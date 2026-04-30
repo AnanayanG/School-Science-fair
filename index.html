@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Strengthener</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="box">
+  <h2>Password Strengthener</h2>
+
+  <input id="inputPass" type="password" placeholder="Enter your basic password">
+
+  <div class="row">
+    <button onclick="strengthen()">Strengthen</button>
+    <button onclick="togglePass()">Show</button>
+  </div>
+
+  <div class="output" id="outputPass">Your stronger password will appear here</div>
+
+  <button class="copyBtn" onclick="copyPass()">Copy Password</button>
+
+  <div class="strengthBox">
+    <div id="strengthBar"></div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
